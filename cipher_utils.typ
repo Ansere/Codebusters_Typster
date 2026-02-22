@@ -96,12 +96,13 @@
   return upper(s.replace(regex("[^A-Za-z ]"), "")).split(" ").filter(it => it != "").map(it => it.clusters().map(c => morse_code.at(c)).join("x")).join("xx")
 }
 
+#let circle_shift(s, shift) = { 
+    let n = s.codepoints().len()
+    return s.codepoints().enumerate().map(it => s.codepoints().at(calc.rem(it.at(0) - shift, n))).join("")
+}
 
 #let generate_k_alphabet(key, shift) = {
-  let circle_shift(s, shift) = { 
-    let n = s.len()
-    return s.clusters().enumerate().map(it => s.at(calc.rem(it.at(0) - shift, n))).join("")
-  }
+  
 
   let k_alphabet = strip_repeats(key) + alphabet.clusters().filter(it => not key.contains(it)).join("")
   k_alphabet = circle_shift(k_alphabet, shift)

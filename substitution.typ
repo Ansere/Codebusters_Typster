@@ -31,16 +31,20 @@
 }
 
 #let aristocrat(rng, plaintext, value, type, k : none, questiontext : none, key : none, shift : none) = {
-  if type == none {
-    error("Aristocrat type must be specified (decode or extract)")
+  if not (upper(type) == "DECODE" or upper(type) == "EXTRACT") {
+    return (rng, error("Aristocrat type must be specified (decode or extract)"))
   }
-  let display(questiontext, ciphertext, mapping, counts, value, k) = {
+
+  let display(questiontext, ciphertext, mapping, counts, value, k, type, key) = {
     if questiontext == none {
       questiontext = "Solve this " + strong("Aristocrat") + " cipher"
       if k != none {
         questiontext += " that was encoded using a " + strong("K" + str(k)) + " alphabet."
       } else {
         questiontext += "."
+      }
+      if type == "EXTRACT" {
+        questiontext += " What was the key used to encode it?"
       }
     }
     [
@@ -52,7 +56,34 @@
         
         #box(width: 100%)[
           #set align(left)
+
+          
+          #{
+            if type == "EXTRACT" [
+              #set text(size: 12pt)
+              Keyword:
+              #set text(size: 14pt)
+              #block(below: 1em, above: 0.5em)[
+                #table(columns: key.codepoints().map(it => {
+                  if it == " " {
+                    return 0.5em
+                  } else {
+                    return 1em
+                  }
+                }), rows: (2em), align: center, stroke: none, ..key.codepoints().map(it => {
+                  if it == " " {
+                    return table.cell("")
+                  } else {
+                    return table.cell(stroke: black)[ ]
+                  }
+                }))
+              ]
+            ]
+          }
+          
+          
           #set par(leading: 3em, spacing: 3em)
+
           #ciphertext
           
           #frequencytable(mapping, counts, k: k)
@@ -63,35 +94,38 @@
   }
 
   if k == none {
+    if type == "EXTRACT" {
+      return (rng, error("k must be specified for extract type"))
+    }
     let (rng, shuffled_alphabet) = generate_rand_alphabet(rng)
     let mapping = alphabet.clusters().zip(shuffled_alphabet, exact: true).to-dict()
     let ciphertext = aristo_encode(plaintext, mapping)
     let counts = alphabet.clusters().map(c => upper(ciphertext).clusters().filter(pc => pc == c).len())
-    return (rng, display(questiontext, ciphertext, mapping, counts, value, k))
+    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key))
   } else {
     if key == none {
-      error("Key must be provided when k is specified")
+      return (rng, error("Key must be provided when k is specified"))
     }
     if shift == none {
-      error("Shift must be provided when k is specified")
+      return (rng, error("Shift must be provided when k is specified"))
     }
-    let ciphertext_alpha = generate_k_alphabet(key, shift)
+    let cleaned_key = key.replace(regex("[^A-Za-z]"), "")
+    let ciphertext_alpha = generate_k_alphabet(cleaned_key, shift)
     let plaintext_alpha = alphabet
     if k == 2 {
       (ciphertext_alpha, plaintext_alpha) = (plaintext_alpha, ciphertext_alpha)
     } else if k == 3 {
       plaintext_alpha = circle_shift(ciphertext_alpha, -shift)
     }
-    let mapping = plaintext_alpha.clusters().zip(ciphertext_alpha.clusters(), exact: true).to-dict()
+    let mapping = plaintext_alpha.clusters().zip(ciphertext_alpha.clusters(), exact: true).sorted().to-dict()
     for (key, value) in mapping{
       if key == value {
-        error("Invalid mapping: " + key + " maps to itself")
-        return
+        return (rng, error("Invalid mapping: " + key + " maps to itself"))
       }
     }
     let ciphertext = aristo_encode(plaintext, mapping)
     let counts = alphabet.clusters().map(c => upper(ciphertext).clusters().filter(pc => pc == c).len())
-    return (rng, display(questiontext, ciphertext, mapping, counts, value, k))
+    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key))
   }
 } 
 
@@ -109,15 +143,20 @@
 }
 
 #let xenocrypt(rng, plaintext, value, type, k : none, questiontext : none, key : none, shift : none) = {
+  if not (upper(type) == "DECODE" or upper(type) == "EXTRACT") {
+    return (rng, error("Xenocrypt type must be specified (decode or extract)"))
+  }
 
-
-  let display(questiontext, ciphertext, mapping, counts, value, k) = {
+  let display(questiontext, ciphertext, mapping, counts, value, k, type, key) = {
     if questiontext == none {
       questiontext = "Solve this " + strong("Xenocrypt") + " cipher"
       if k != none {
         questiontext += " that was encoded using a " + strong("K" + str(k)) + " alphabet."
       } else {
         questiontext += "."
+      }
+      if type == "EXTRACT" {
+        questiontext += " What was the key used to encode it?"
       }
     }
     [
@@ -129,6 +168,28 @@
         
         #box(width: 100%)[
           #set align(left)
+          #{
+            if type == "EXTRACT" [
+              #set text(size: 12pt)
+              Keyword:
+              #set text(size: 14pt)
+              #block(below: 1em, above: 0.5em)[
+                #table(columns: key.codepoints().map(it => {
+                  if it == " " {
+                    return 0.5em
+                  } else {
+                    return 1em
+                  }
+                }), rows: (2em), align: center, stroke: none, ..key.codepoints().map(it => {
+                  if it == " " {
+                    return table.cell("")
+                  } else {
+                    return table.cell(stroke: black)[ ]
+                  }
+                }))
+              ]
+            ]
+          }
           #set par(leading: 3em, spacing: 3em)
           #ciphertext
           
@@ -159,7 +220,7 @@
 
   let generate_k_alphabet(key, shift) = {
     let circle_shift(s, shift) = { 
-      let n = s.len()
+      let n = s.clusters().len()
       return s.codepoints().enumerate().map(it => s.codepoints().at(calc.rem(it.at(0) - shift, n))).join("")
     }
 
@@ -168,36 +229,40 @@
     return k_alphabet
   }
 
+  plaintext = upper(plaintext).replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U")
+
   if k == none {
     let (rng, shuffled_alphabet) = generate_rand_span_alphabet(rng)
     let mapping = spanish_alphabet.clusters().zip(shuffled_alphabet, exact: true).to-dict()
     let ciphertext = aristo_encode(plaintext, mapping)
     let counts = spanish_alphabet.clusters().map(c => upper(ciphertext).clusters().filter(pc => pc == c).len())
-    return (rng, display(questiontext, ciphertext, mapping, counts, value, k))
+    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key))
   } else {
     if key == none {
-      error("Key must be provided when k is specified")
+      return (rng, error("Key must be provided when k is specified"))
     }
     if shift == none {
-      error("Shift must be provided when k is specified")
+      return (rng, error("Shift must be provided when k is specified"))
     }
-    let ciphertext_alpha = generate_k_alphabet(key, shift)
+    // the key can also contain n-tildes, so include it 
+    let cleaned_key = upper(key).replace(regex("[^A-Za-zÑ]"), "")
+    let ciphertext_alpha = generate_k_alphabet(cleaned_key, shift)
     let plaintext_alpha = spanish_alphabet
     if k == 2 {
       (ciphertext_alpha, plaintext_alpha) = (plaintext_alpha, ciphertext_alpha)
     } else if k == 3 {
       plaintext_alpha = circle_shift(ciphertext_alpha, -shift)
     }
-    let mapping = plaintext_alpha.clusters().zip(ciphertext_alpha.clusters(), exact: true).to-dict()
+    let unsorted_mapping = plaintext_alpha.clusters().zip(ciphertext_alpha.clusters(), exact: true).to-dict()
+    let mapping = spanish_alphabet.clusters().map(it => (it, unsorted_mapping.at(it))).to-dict()
     for (key, value) in mapping{
       if key == value {
-        error("Invalid mapping: " + key + " maps to itself")
-        return
+        return (rng, error("Invalid mapping: " + key + " maps to itself"))
       }
     }
     let ciphertext = aristo_encode(plaintext, mapping)
     let counts = spanish_alphabet.clusters().map(c => upper(ciphertext).clusters().filter(pc => pc == c).len())
-    return (rng, display(questiontext, ciphertext, mapping, counts, value, k))
+    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key))
   }
 } 
 
@@ -277,5 +342,3 @@
      ]
    ]
 }
-
-
