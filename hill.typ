@@ -13,9 +13,9 @@
   }
   if questiontext == none {
     if upper(type) == "ENCODE" {
-      questiontext = "Encode this Hill cipher. The key is " + strong(key) + "."
+      questiontext = "Encode this " + strong("Hill") + " cipher. The key is " + strong(key) + "."
     } else {
-      questiontext = "Decode this Hill cipher. The key is " + strong(key) + "."
+      questiontext = "Decode this " + strong("Hill") + " cipher. The key is " + strong(key) + "."
     }
   }
   if bonus {
@@ -89,7 +89,7 @@
     #set text(font: "Fira Code", size: 14pt)
     #set align(center)
 
-    #box(width: 100%, height:40%)[
+    #box(width: 100%)[
       #set align(left)
       #set par(leading: 3em, spacing: 3em)
       

@@ -30,7 +30,7 @@
   }).join("")
 }
 
-#let aristocrat(rng, plaintext, value, type, k : none, questiontext : none, key : none, shift : none) = {
+#let aristocrat(rng, plaintext, type, value, k : none, questiontext : none, key : none, shift : none, timed : false) = {
   if not (upper(type) == "DECODE" or upper(type) == "EXTRACT") {
     return (rng, error("Aristocrat type must be specified (decode or extract)"))
   }
@@ -38,7 +38,7 @@
   let display(questiontext, ciphertext, mapping, counts, value, k, type, key) = {
     if questiontext == none {
       questiontext = "Solve this " + strong("Aristocrat") + " cipher"
-      if k != none {
+      if k != none and k != "" {
         questiontext += " that was encoded using a " + strong("K" + str(k)) + " alphabet."
       } else {
         questiontext += "."
@@ -49,12 +49,16 @@
     }
     [
       #box()[
+        #{
+          if timed [
+            *Timed Question*
+          ]
+        }
         (#value points) #questiontext
         \
         #set text(font: "Fira Code", size: 14pt)
         #set align(center)
-        
-        #box(width: 100%)[
+        #pad(left: if timed { 1em } else { 0em }, box(width: 100%)[
           #set align(left)
 
           
@@ -87,13 +91,13 @@
           #ciphertext
           
           #frequencytable(mapping, counts, k: k)
-        ]
+        ])
       ]
 
     ]
   }
 
-  if k == none {
+  if k == none or k == "" {
     if type == "EXTRACT" {
       return (rng, error("k must be specified for extract type"))
     }
@@ -106,9 +110,11 @@
     if key == none {
       return (rng, error("Key must be provided when k is specified"))
     }
-    if shift == none {
+    if shift == none or shift == ""{
       return (rng, error("Shift must be provided when k is specified"))
     }
+    shift = int(shift)
+    k = int(k)
     let cleaned_key = key.replace(regex("[^A-Za-z]"), "")
     let ciphertext_alpha = generate_k_alphabet(cleaned_key, shift)
     let plaintext_alpha = alphabet
@@ -129,7 +135,7 @@
   }
 } 
 
-#let patristocrat(rng, plaintext, value, type, k : none, questiontext : none, key : none, shift : none) = {
+#let patristocrat(rng, plaintext, type, value, k : none, questiontext : none, key : none, shift : none) = {
   if questiontext == none {
     questiontext = "Solve this " + strong("Patristocrat") + " cipher"
     if k != none {
@@ -139,10 +145,10 @@
     }
   }
   let plaintext_adj = blockify(plaintext.replace(regex("[^A-Za-z]"), ""), 5).join(" ")
-  aristocrat(rng, plaintext_adj, value, type, k: k, questiontext: questiontext, key: key, shift: shift)
+  aristocrat(rng, plaintext_adj, type, value, k: k, questiontext: questiontext, key: key, shift: shift)
 }
 
-#let xenocrypt(rng, plaintext, value, type, k : none, questiontext : none, key : none, shift : none) = {
+#let xenocrypt(rng, plaintext, type, value, k : none, questiontext : none, key : none, shift : none) = {
   if not (upper(type) == "DECODE" or upper(type) == "EXTRACT") {
     return (rng, error("Xenocrypt type must be specified (decode or extract)"))
   }
@@ -231,7 +237,7 @@
 
   plaintext = upper(plaintext).replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U")
 
-  if k == none {
+  if k == none or k == "" {
     let (rng, shuffled_alphabet) = generate_rand_span_alphabet(rng)
     let mapping = spanish_alphabet.clusters().zip(shuffled_alphabet, exact: true).to-dict()
     let ciphertext = aristo_encode(plaintext, mapping)
@@ -267,6 +273,11 @@
 } 
 
 #let affine(plaintext, value, a, b, questiontext: none) = {
+  if a.match(regex("^[0-9]+$")) == none or b.match(regex("^[0-9]+$")) == none {
+    return error("a and b must be integers")
+  }
+  a = int(a)
+  b = int(b)
   if calc.gcd(a, 26) != 1 {
     error("a must be coprime to 26")
     return
@@ -299,6 +310,10 @@
   if questiontext == none {
     questiontext = "Solve this " + strong("Caesar") + " cipher with a shift of " + str(shift) + "."
   }
+  if shift.match(regex("^-?[0-9]+$")) == none {
+    return error("Shift must be an integer")
+  }
+  shift = int(shift)
   let mapping = alphabet.clusters().map(c => {
     let x = conv_0A25Z(c)
     let y = calc.rem(x + shift, 26)

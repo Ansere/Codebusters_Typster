@@ -15,7 +15,7 @@
   return word_mappings
 }
 
-#let baconian(rng, plaintext, type, value, a: none, b: none, questiontext: none, amount : 0, bonus : false) = {
+#let baconian(rng, plaintext, type, value, a: none, b: none, questiontext: none, amount : 0, bonus : false, crib : none) = {
   if type == none {
     return (rng, error("Baconian type must be specified (encode or decode)"))
   }
@@ -52,6 +52,7 @@
         }
       }
     }
+    ciphertext = ciphertext.clusters().join(sym.zws)
     return (rng, [
       #box()[
         (#value points) #questiontext
@@ -68,9 +69,19 @@
       ]
     ])
   } else if type == "WORDS" {
-    if amount == none or amount <= 0 {
+    if amount.match(regex("^[0-9]+$")) == none {
+      return (rng, error("Amount must be a positive integer for WORDS type"))
+    }
+    if amount == none or int(amount) <= 0 {
       return (rng, error("Amount of words must be specified and greater than 0 for WORDS type"))
     }
+    if crib == none or crib == "" {
+      return (rng, error("Crib must be specified for WORDS type"))
+    }
+    if upper(crib) not in upper(plaintext) {
+      return (rng, error("Crib must be a substring of the plaintext"))
+    }
+    amount = int(amount)
     amount = calc.rem(amount - 1, 26) + 1  
     let mapping = (:)
     let c = 0
@@ -117,6 +128,3 @@
     return (rng, error("Invalid Baconian type specified. Must be SEQUENCE, LETTERS, or WORDS."))
   }
 }
-
-
-
