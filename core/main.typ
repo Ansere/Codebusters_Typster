@@ -9,7 +9,7 @@
 #import "nihilist.typ": *
 #import "columnar.typ": *
 #import "checkboard.typ": *
-
+#import "cheat.typ": *
 
 #let min_height(h, body) = layout(
   available => {
@@ -35,6 +35,8 @@
     #{
       if image_file != none {
         image(image_file, width: 50%)
+      } else {
+        v(20%)
       }
     }
     #set align(left)
@@ -81,8 +83,8 @@
     ],
     margin: (right: 10%, left: 10%, top: 5%),
   )
-  blank_page()
-  let rng = gen-rng-f(42)
+  //blank_page()
+  let rng = gen-rng-f(11204122026)
   let disp = ""
   let data = csv(file, row-type: dictionary)
   if shuffle {
@@ -258,7 +260,7 @@
     ))
     #v(100%)
   ]
-  blank_page()
+  //blank_page()
   set page(
     footer: context [
       #line(length: 100%)
@@ -273,6 +275,13 @@
       #line(length: 100%)
       #{
         if question.at("#") == "T" {
+          let shift = none
+          let mapping_str = none
+          if upper(str(question.at("Key2"))) != lower(str(question.at("Key2"))) {
+            mapping_str = question.at("Key2")
+          } else {
+            shift = question.at("Key2")
+          }
           let (rng, disp) = aristocrat(
             rng,
             question.at("Plaintext"),
@@ -280,20 +289,31 @@
             question.at("Value"),
             key: question.at("Key1"),
             k: question.at("Key3"),
-            shift: question.at("Key2"),
+            shift: shift,
+            mapping_str: mapping_str,
+            questiontext: question.at("Question Text"),
             timed: true,
           )
           min_height(40%)[#disp]
           v(100%)
         } else if question.at("Cipher") == "ARISTOCRAT" {
+          // if Key2 is an integer, treat it as a shift. Otherwise, treat it as a mapping string.
+          let shift = none
+          let mapping_str = none
+          if upper(str(question.at("Key2"))) != lower(str(question.at("Key2"))) {
+            mapping_str = question.at("Key2")
+          } else {
+            shift = question.at("Key2")
+          }
           let (rng, disp) = aristocrat(
             rng,
             question.at("Plaintext"),
             question.at("Type"),
             question.at("Value"),
-            key: question.at("Key1"),
             k: question.at("Key3"),
-            shift: question.at("Key2"),
+            key: question.at("Key1"),
+            shift: shift,
+            mapping_str: mapping_str,
             questiontext: question.at("Question Text", default: none),
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
@@ -303,17 +323,6 @@
             question.at("Key1"),
             question.at("Value"),
             question.at("Type"),
-            bonus: question.at("Bonus") == "TRUE",
-            questiontext: question.at("Question Text", default: none),
-          )
-          list(min_height(40%)[#disp], marker: strong(str(index) + "."))
-        } else if question.at("Cipher") == "COLUMNAR" {
-          let (rng, disp) = columnar(
-            rng,
-            question.at("Plaintext"),
-            int(question.at("Key1")),
-            question.at("Key2"),
-            question.at("Value"),
             bonus: question.at("Bonus") == "TRUE",
             questiontext: question.at("Question Text", default: none),
           )
@@ -329,7 +338,7 @@
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
         } else if question.at("Cipher") == "CHECKERBOARD" {
-          let (rng, disp) = checkerboard(
+          let disp = checkerboard(
             question.at("Plaintext"),
             question.at("Key1"),
             question.at("Key2"),
@@ -403,6 +412,7 @@
             question.at("Value"),
             questiontext: question.at("Question Text", default: none),
             shift: question.at("Key2"),
+            k: question.at("Key3"),
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
         } else if question.at("Cipher") == "PATRISTOCRAT" {
@@ -413,6 +423,7 @@
             question.at("Value"),
             key: question.at("Key1"),
             shift: question.at("Key2"),
+            k: question.at("Key3"),
             questiontext: question.at("Question Text", default: none),
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
@@ -449,14 +460,3 @@
     ]
   }
 }]
-
-
-#generate(
-  "2026 Regionals ATX Codebusters B_C - Master Sheet - Invi Questions.csv",
-  "UT Invitational",
-  "B",
-  "coverart.png",
-  datetime(year: 2024, month: 10, day: 26),
-  ("Klebb Chiang (UIUC '25)", "Rhea Shah (UT '26)",),
-  shuffle: true,
-)

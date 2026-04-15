@@ -22,27 +22,27 @@
       return conv_A0Z25(calc.rem(i - k, 13))
     }
   }).chunks(5).map(it => it.join("")).join(" ")
-  if questiontext == none {
+  if questiontext == none or questiontext == "" {
     if type == "ENCODE" {
       questiontext = "Encode "
     } else {
       questiontext = "Decode "
     }
-    questiontext += ( "this "
-        + strong("plaintext")
-        + " using the "
-        + strong("Porta")
-        + " cipher with the key "
-        + strong(key)
-        + ". What is the resulting ciphertext?" )
+    questiontext += "this "
+    if type == "ENCODE" {
+      questiontext += "*plaintext* "
+    } else {
+      questiontext += "*ciphertext* "
+    }
+    questiontext += " using the *Porta* cipher with the key *" + key + "*. What is the resulting ciphertext?"
   }
 
   if bonus {
-    questiontext += strong(" ★ This is a special bonus question.")
+    questiontext += "* ★ This is a special bonus question.*"
   }
 
   [ 
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     \
     #set text(font: "Fira Code", size: 14pt)
     #set par(leading: 3em, spacing: 1em)

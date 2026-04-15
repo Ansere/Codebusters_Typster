@@ -6,18 +6,26 @@
     [
       #set text(font: "Fira Code", size: 9pt)
       #set align(left)
-      #if k != 2 [
-        
+      #{
+        let mapping_list = mapping.keys().zip(counts.map(it => str(it)), exact: true).sorted()
+        let ntilde = mapping_list.find(it => upper(it.at(0)) == "Ñ")
+        if ntilde != none {
+          mapping_list = mapping_list.filter(it => upper(it.at(0)) != "Ñ")
+          mapping_list = mapping_list.slice(0, 14) + (ntilde,) + mapping_list.slice(14)
+        }
+        mapping = mapping_list.to-dict()
+      }
+      #if str(k) != "2" [
           #table(columns: (auto,) + (1fr,)* (mapping.len()), rows: 3, align: center, table.header([#{
-          if k != none {
+          if k != none and k != "" {
             strong("K" + str(k))
           }
-        }], ..mapping.keys()), "Frequency", ..counts.map(it => str(it)), "Replacement")
+        }], ..mapping.keys()), "Frequency", ..mapping.values(), "Replacement")
 
       ] else [
         #table(columns: (auto,) + (1fr,)* (mapping.len()), rows: 3, align: center, table.header([#{
           "Replacement"
-        }]), strong("K2"), ..mapping.values(), "Frequency", ..counts.map(it => str(it)))
+        }]), strong("K2"), ..mapping.keys(), "Frequency", ..mapping.values())
       ]
     ]
 }
@@ -30,16 +38,16 @@
   }).join("")
 }
 
-#let aristocrat(rng, plaintext, type, value, k : none, questiontext : none, key : none, shift : none, timed : false) = {
+#let aristocrat(rng, plaintext, type, value, k : none, questiontext : none, key : none, shift : none, timed : false, mapping_str : none) = {
   if not (upper(type) == "DECODE" or upper(type) == "EXTRACT") {
     return (rng, error("Aristocrat type must be specified (decode or extract)"))
   }
 
   let display(questiontext, ciphertext, mapping, counts, value, k, type, key) = {
-    if questiontext == none {
-      questiontext = "Solve this " + strong("Aristocrat") + " cipher"
+    if questiontext == none or questiontext == "" {
+      questiontext = "Solve this *Aristocrat* cipher"
       if k != none and k != "" {
-        questiontext += " that was encoded using a " + strong("K" + str(k)) + " alphabet."
+        questiontext += " that was encoded using a *K" + str(k) + "* alphabet."
       } else {
         questiontext += "."
       }
@@ -54,7 +62,7 @@
             *Timed Question*
           ]
         }
-        (#value points) #questiontext
+        (#value points) #eval(questiontext, mode: "markup")
         \
         #set text(font: "Fira Code", size: 14pt)
         #set align(center)
@@ -96,8 +104,12 @@
 
     ]
   }
-
-  if k == none or k == "" {
+  if mapping_str != none {
+    let mapping = mapping_str.clusters().enumerate().map(it => (it.at(1), alphabet.codepoints().at(it.at(0)))).to-dict()
+    let ciphertext = aristo_encode(plaintext, mapping)
+    let counts = alphabet.clusters().map(c => upper(ciphertext).clusters().filter(pc => pc == c).len())
+    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key))
+  } else if k == none or k == "" {
     if type == "EXTRACT" {
       return (rng, error("k must be specified for extract type"))
     }
@@ -136,10 +148,10 @@
 } 
 
 #let patristocrat(rng, plaintext, type, value, k : none, questiontext : none, key : none, shift : none) = {
-  if questiontext == none {
-    questiontext = "Solve this " + strong("Patristocrat") + " cipher"
+  if questiontext == none or questiontext == "" {
+    questiontext = "Solve this *Patristocrat* cipher"
     if k != none {
-      questiontext += " that was encoded using a " + strong("K" + str(k)) + " alphabet."
+      questiontext += " that was encoded using a *" + "K" + str(k) + "* alphabet."
     } else {
       questiontext += "."
     }
@@ -154,10 +166,10 @@
   }
 
   let display(questiontext, ciphertext, mapping, counts, value, k, type, key) = {
-    if questiontext == none {
-      questiontext = "Solve this " + strong("Xenocrypt") + " cipher"
+    if questiontext == none or questiontext == "" {
+      questiontext = "Solve this *Xenocrypt* cipher"
       if k != none {
-        questiontext += " that was encoded using a " + strong("K" + str(k)) + " alphabet."
+        questiontext += " that was encoded using a *" + "K" + str(k) + "* alphabet."
       } else {
         questiontext += "."
       }
@@ -167,7 +179,7 @@
     }
     [
       #box()[
-        (#value points) #questiontext
+        (#value points) #eval(questiontext, mode: "markup")
         \
         #set text(font: "Fira Code", size: 14pt)
         #set align(center)
@@ -198,7 +210,7 @@
           }
           #set par(leading: 3em, spacing: 3em)
           #ciphertext
-          
+
           #frequencytable(mapping, counts, k: k)
         ]
       ]
@@ -225,6 +237,7 @@
   }
 
   let generate_k_alphabet(key, shift) = {
+    shift = int(shift)
     let circle_shift(s, shift) = { 
       let n = s.clusters().len()
       return s.codepoints().enumerate().map(it => s.codepoints().at(calc.rem(it.at(0) - shift, n))).join("")
@@ -282,8 +295,8 @@
     error("a must be coprime to 26")
     return
   }
-  if questiontext == none {
-    questiontext = "Solve this " + strong("Affine") + " cipher with a = " + str(a) + " and b = " + str(b) + "."
+  if questiontext == none or questiontext == "" {
+    questiontext = "Solve this *Affine* cipher with a = " + str(a) + " and b = " + str(b) + "."
   }
   let mapping = alphabet.clusters().map(c => {
     let x = conv_0A25Z(c)
@@ -292,7 +305,7 @@
   }).to-dict()
   let ciphertext = aristo_encode(plaintext, mapping)
   box()[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     \
     #set text(font: "Fira Code", size: 14pt)
     #set align(center)
@@ -307,8 +320,8 @@
 }
 
 #let caesar(plaintext, value, shift, questiontext: none) = {
-  if questiontext == none {
-    questiontext = "Solve this " + strong("Caesar") + " cipher with a shift of " + str(shift) + "."
+  if questiontext == none or questiontext == "" {
+    questiontext = "Solve this *Caesar* cipher with a shift of " + str(shift) + "."
   }
   if shift.match(regex("^-?[0-9]+$")) == none {
     return error("Shift must be an integer")
@@ -321,7 +334,7 @@
   }).to-dict()
   let ciphertext = aristo_encode(plaintext, mapping)
   box()[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     \
     #set text(font: "Fira Code", size: 14pt)
     #set align(center)
@@ -335,8 +348,8 @@
 }
 
 #let atbash(plaintext, value, questiontext: none) = {
-  if questiontext == none {
-    questiontext = "Solve this " + strong("Atbash") + " cipher."
+  if questiontext == none or questiontext == "" {
+    questiontext = "Solve this  *Atbash* cipher."
   }
   let mapping = alphabet.clusters().map(c => {
     let x = conv_0A25Z(c)
@@ -345,7 +358,7 @@
   }).to-dict()
   let ciphertext = aristo_encode(plaintext, mapping)
   box()[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     \
     #set text(font: "Fira Code", size: 14pt)
     #set align(center)

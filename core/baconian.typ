@@ -20,11 +20,11 @@
     return (rng, error("Baconian type must be specified (encode or decode)"))
   }
   let bacon = baconify(plaintext)
-  if questiontext == none {
-    questiontext = "Decode this " + strong("Baconian") + " cipher."
+  if questiontext == none or questiontext == "" {
+    questiontext = "Decode this *Baconian* cipher."
   }
   if bonus {
-    questiontext += strong(" ★ This is a special bonus question.")
+    questiontext += "* ★ This is a special bonus question.*"
   }
   if type == "SEQUENCE" or type == "LETTERS" {
     if a == none or b == none {
@@ -55,7 +55,7 @@
     ciphertext = ciphertext.clusters().join(sym.zws)
     return (rng, [
       #box()[
-        (#value points) #questiontext
+        (#value points) #eval(questiontext, mode: "markup")
         \
         #set text(font: "Fira Code", size: 14pt)
         #set align(center)
@@ -110,7 +110,7 @@
     let ciphertext = ciphertext_words.join(" ")
     return (rng, [
       #box()[
-        (#value points) #questiontext
+        (#value points) #eval(questiontext, mode:"markup")
         \
         #set text(font: "Fira Code", size: 14pt)
         #set align(center)

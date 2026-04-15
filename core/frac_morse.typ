@@ -32,12 +32,12 @@
     return (morsed_letter, letter)
   }).to-dict()
   let ciphertext = morse.clusters().chunks(3, exact: true).map(it => mapping.at(it.join("")))
-  if questiontext == none {
-    questiontext = "Decode this " + strong("Fractionated Morse") + " cipher. You are told the plaintext contains the crib " + strong(upper(crib)) + " somewhere."
+  if questiontext == none or questiontext == "" {
+    questiontext = "Decode this *Fractionated Morse* cipher. You are told the plaintext contains the crib *" + upper(crib) + "* somewhere."
   }
   let displayed_ciphertext = ciphertext.join(sym.zws)
   box()[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     \
     #set text(font: "Fira Code", size: 14pt)
     #set align(center)

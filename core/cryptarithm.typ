@@ -54,18 +54,20 @@
   if not upper(answer).replace(" ", "").clusters().all(it => it in solution) {
     return error("Answer contains letters not in the solution")
   }
-  if questiontext == none {
+  if questiontext == none or questiontext == "" {
     questiontext = (
       "Solve this "
-        + strong("cryptarithm")
+        + "*cryptarithm*"
         + ". What do the values "
-        + strong(answer.clusters().map(it => if it != " " { str(solution.at(it)) }).join(""))
+        + "*"
+        + answer.clusters().map(it => if it != " " { str(solution.at(it)) }).join("")
+        + "*"
         + " decode to?"
     )
   }
 
   if bonus {
-    questiontext += strong(" ★ This is a special bonus question.")
+    questiontext += "* ★ This is a special bonus question*."
   }
 
   let display_equation(word1, word2, operator, result, ..intermediates) = {
@@ -177,7 +179,7 @@
   }
 
   box()[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     #set align(left)
     #display_equation(word1, word2, operator, right_eq, ..intermediates)
   ]

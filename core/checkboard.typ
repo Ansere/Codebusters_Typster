@@ -8,7 +8,7 @@
   col_key = upper(col_key).replace(regex("[^A-Za-z]"), "")
   polybius_key = upper(polybius_key).replace(regex("[^A-Za-z]"), "").replace("J", "I")
   if row_key.len() != col_key.len() or row_key.len() != 5 {
-    return error("Row key and column key must be 5 characters long.")
+    return (rng, error("Row key and column key must be 5 characters long."))
   }
   let polybius_dict = (
     strip_repeats(polybius_key) + alphabet.clusters().filter(it => it != "J" and not polybius_key.contains(it)).join("")
@@ -30,18 +30,23 @@
     .map(it => box()[
       #it
     ])
-  if questiontext == none {
+  if questiontext == none or questiontext == "" {
     questiontext = (
       "Decode this plaintext using the "
-        + strong("Checkerboard cipher")
+        + "*Checkerboard cipher*"
         + " with Polybius key "
-        + strong(polybius_key)
+        + "*"
+        + polybius_key
+        + "*"
         + "."
     )
   }
+  if bonus {
+    questiontext += "* ★ This is a special bonus question.*"
+  }
 
   box(width: 100%)[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     #set text(font: "Fira Code", size: 14pt)
 
     #box()[

@@ -32,14 +32,14 @@
     .map(it => box()[
       #it
     ])
-  if questiontext == none {
-    questiontext = "Encode this plaintext using the " + strong("Nihilist") + " cipher with a key of " + strong(key) + " and a Polybius key of " + strong(polybius) + ". What is the resulting ciphertext?"
+  if questiontext == none or questiontext == "" {
+    questiontext = "Encode this plaintext using the *Nihilist* cipher with a key of *" + key + "* and a Polybius key of *" + polybius + "*. What is the resulting ciphertext?"
   }
   if bonus {
-    questiontext += strong(" ★ This is a special bonus question.")
+    questiontext += "* ★ This is a special bonus question.*"
   }
   box(width: 100%)[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     #set text(font: "Fira Code", size: 14pt)
 
     #box()[

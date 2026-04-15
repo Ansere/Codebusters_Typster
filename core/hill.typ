@@ -11,15 +11,15 @@
   if not (key.len() == 4 or key.len() == 9) {
     return error("Key must be 4 or 9 characters long for Hill cipher")
   }
-  if questiontext == none {
+  if questiontext == none or questiontext == "" {
     if upper(type) == "ENCODE" {
-      questiontext = "Encode this " + strong("Hill") + " cipher. The key is " + strong(key) + "."
+      questiontext = "Encode this *Hill* cipher. The key is *" + key + "*."
     } else {
-      questiontext = "Decode this " + strong("Hill") + " cipher. The key is " + strong(key) + "."
+      questiontext = "Decode this *Hill* cipher. The key is *" + key + "*."
     }
   }
   if bonus {
-    questiontext += strong(" ★ This is a special bonus question.")
+    questiontext += "* ★ This is a special bonus question.*"
   }
   if (upper(type) == "ENCODE") {
     return error("Encode not implemented yet for Hill cipher")
@@ -84,7 +84,7 @@
   }
   let ciphertext = numbered_ciphertext.map(it => conv_A0Z25(it)).join("")
   box()[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     \
     #set text(font: "Fira Code", size: 14pt)
     #set align(center)

@@ -22,11 +22,11 @@
   let shuffled = 0
   (rng, shuffled) = shuffle-f(rng, range(0, columns).map(it => grid.map(row => row.at(it)).join("")))
   let ciphertext = shuffled.join("").clusters().chunks(5).map(it => it.join("")).join(" ")
-  if questiontext == none {
-   questiontext = "Decode this " + strong("Columnar Transposition") + " cipher. You are told the plaintext contains the crib " + strong(upper(crib)) + " somewhere."
+  if questiontext == none or questiontext == "" {
+   questiontext = "Decode this *Columnar Transposition* cipher. You are told the plaintext contains the crib *" + upper(crib) + "* somewhere."
   } 
   let disp = box()[
-    (#value points) #questiontext
+    (#value points) #eval(questiontext, mode: "markup")
     \
     #set text(font: "Fira Code", size: 14pt)
     #set align(center)
