@@ -130,10 +130,10 @@
     let cleaned_key = key.replace(regex("[^A-Za-z]"), "")
     let ciphertext_alpha = generate_k_alphabet(cleaned_key, shift)
     let plaintext_alpha = alphabet
-    if k == 2 {
+    if str(k) == "1" {
       (ciphertext_alpha, plaintext_alpha) = (plaintext_alpha, ciphertext_alpha)
-    } else if k == 3 {
-      plaintext_alpha = circle_shift(ciphertext_alpha, -shift)
+    } else if str(k) == "3" {
+      plaintext_alpha = circle_shift(ciphertext_alpha, shift)
     }
     let mapping = plaintext_alpha.clusters().zip(ciphertext_alpha.clusters(), exact: true).sorted().to-dict()
     for (key, value) in mapping{
@@ -267,10 +267,10 @@
     let cleaned_key = upper(key).replace(regex("[^A-Za-zÑ]"), "")
     let ciphertext_alpha = generate_k_alphabet(cleaned_key, shift)
     let plaintext_alpha = spanish_alphabet
-    if k == 2 {
+    if str(k) == "1" {
       (ciphertext_alpha, plaintext_alpha) = (plaintext_alpha, ciphertext_alpha)
-    } else if k == 3 {
-      plaintext_alpha = circle_shift(ciphertext_alpha, -shift)
+    } else if str(k) == "3" {
+      plaintext_alpha = circle_shift(ciphertext_alpha, shift)
     }
     let unsorted_mapping = plaintext_alpha.clusters().zip(ciphertext_alpha.clusters(), exact: true).to-dict()
     let mapping = spanish_alphabet.clusters().map(it => (it, unsorted_mapping.at(it))).to-dict()

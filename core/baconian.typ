@@ -44,6 +44,9 @@
         }
       }
     } else {
+      if a.len() != b.len() {
+        return (rng, error("A and B strings must be of the same length for SEQUENCE type, TODO: not implemented yet."))
+      }
       for (i, c) in bacon.clusters().enumerate() {
         if c == "0" {
           ciphertext += a.codepoints().at(calc.rem(i, a.codepoints().len()))

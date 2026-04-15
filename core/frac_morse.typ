@@ -15,7 +15,7 @@
 #set text(font:"Fira Code", size: 14pt)
 
 #let frac_morse(plaintext, key, crib, value, bonus : false, questiontext: none) = {
-  plaintext = plaintext.replace(regex("[^A-Za-z]"), "")
+  plaintext = plaintext.replace(regex("[^A-Za-z ]"), "")
   key = key.replace(regex("[^A-Za-z]"), "")
   if upper(crib) not in upper(plaintext) {
     return error("Crib must be a substring of the plaintext")

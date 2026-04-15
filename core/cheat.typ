@@ -19,7 +19,7 @@
   strong("Y,Z"), .."ZNOPQRSTUVWXY".clusters()),
   // generate baconian mappings
   table(columns: (4em, 3em), align: center, "AAAAA", "A", "AAAAB", "B", "AAABA", "C", "AAABB", "D", "AABAA", "E", "AABAB", "F", "AABBA", "G", "AABBB", "H", "ABAAA", "I/J", "ABAAB", "K", "ABABA", "L", "ABABB", "M"),
-  table(columns: (4em, 3em), align: center, "ABBAA", "N", "ABBAB", "O", "ABBBA", "P", "ABBBB", "Q", "BAAAA", "R", "BAAAB", "S", "BAABA", "T", "BAABB", "U/V", "BABAB", "W", "BABAB", "X", "BABBA", "Y", "BABBB", "Z"))
+  table(columns: (4em, 3em), align: center, "ABBAA", "N", "ABBAB", "O", "ABBBA", "P", "ABBBB", "Q", "BAAAA", "R", "BAAAB", "S", "BAABA", "T", "BAABB", "U/V", "BABAA", "W", "BABAB", "X", "BABBA", "Y", "BABBB", "Z"))
 
   #set align(center)
   #table(columns: (1.5em,) * 26, align: center, "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25")
@@ -59,7 +59,7 @@
   = Morse Code
   #set text(font: "Fira Code", size: 10pt)
   #grid(columns: (auto, ) * 5, column-gutter: 1fr, 
-    table(columns: (2em, 4em), align: horizon + center, "A", strong("•−"), "B", strong("−•"), "C", strong("−•−•"), "D", strong("−••"), "E", strong("•")),
+    table(columns: (2em, 4em), align: horizon + center, "A", strong("•−"), "B", strong("−•••"), "C", strong("−•−•"), "D", strong("−••"), "E", strong("•")),
     table(columns: (2em, 4em), align: horizon + center, "F", strong("••−•"), "G", strong("−−•"), "H", strong("••••"), "I", strong("••"), "J", strong("•−−−")),
     table(columns: (2em, 4em), align: horizon + center, "K", strong("−•−"), "L", strong("•−••"), "M", strong("−−"), "N", strong("−•"), "O", strong("−−−")),
     table(columns: (2em, 4em), align: horizon + center, "P", strong("•−−•"), "Q", strong("−−•−"), "R", strong("•−•"), "S", strong("•••"), "T", strong("−")),
@@ -91,3 +91,5 @@
   )
   #v(100%)
 ]
+
+#cheat

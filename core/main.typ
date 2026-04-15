@@ -305,7 +305,8 @@
           } else {
             shift = question.at("Key2")
           }
-          let (rng, disp) = aristocrat(
+          let disp = []
+          (rng, disp) = aristocrat(
             rng,
             question.at("Plaintext"),
             question.at("Type"),
@@ -379,7 +380,8 @@
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
         } else if question.at("Cipher") == "BACONIAN" {
-          let (rng, disp) = baconian(
+          let disp = []
+          (rng, disp) = baconian(
             rng,
             question.at("Plaintext"),
             question.at("Type"),
@@ -393,7 +395,8 @@
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
         } else if question.at("Cipher") == "COLUMNAR" {
-          let (rng, disp) = columnar(
+          let disp = []
+          (rng, disp) = columnar(
             rng,
             question.at("Plaintext"),
             int(question.at("Key1")),
@@ -404,7 +407,8 @@
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
         } else if question.at("Cipher") == "XENOCRYPT" {
-          let (rng, disp) = xenocrypt(
+          let disp = []
+          (rng, disp) = xenocrypt(
             rng,
             question.at("Plaintext"),
             question.at("Type"),
@@ -416,7 +420,8 @@
           )
           list(min_height(40%)[#disp], marker: strong(str(index) + "."))
         } else if question.at("Cipher") == "PATRISTOCRAT" {
-          let (rng, disp) = patristocrat(
+          let disp = []
+          (rng, disp) = patristocrat(
             rng,
             question.at("Plaintext"),
             question.at("Type"),
