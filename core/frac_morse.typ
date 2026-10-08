@@ -17,7 +17,7 @@
 #let frac_morse(plaintext, key, crib, value, bonus : false, questiontext: none) = {
   plaintext = plaintext.replace(regex("[^A-Za-z ]"), "")
   key = key.replace(regex("[^A-Za-z]"), "")
-  if upper(crib) not in upper(plaintext) {
+  if upper(crib) not in upper(answerize(plaintext)) {
     return error("Crib must be a substring of the plaintext")
   }
   if crib.len() < 4 {

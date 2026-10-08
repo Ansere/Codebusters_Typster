@@ -3,7 +3,7 @@
 #import "cipher_utils.typ": *
 
 #let nihilist(plaintext, key, polybius, value, bonus : false, questiontext: none) = {
-  plaintext = upper(plaintext).replace(regex("[^A-Za-z]"), "")
+  plaintext = upper(plaintext).replace(regex("[^A-Za-z]"), "").replace("J", "I")
   key = upper(key).replace(regex("[^A-Za-z]"), "")
   polybius = upper(polybius).replace(regex("[^A-Za-z]"), "")
   if key.replace(" ", "") == "" {
@@ -56,7 +56,7 @@
         #{
           for thing in ciphertext {
             thing
-            h(2em)
+            h(2em, weak: true)
           }
         }
       ]

@@ -10,6 +10,7 @@
 #import "columnar.typ": *
 #import "checkboard.typ": *
 #import "cheat.typ": *
+#import "homophonic.typ": *
 
 #let min_height(h, body) = layout(
   available => {
@@ -84,9 +85,12 @@
     margin: (right: 10%, left: 10%, top: 5%),
   )
   //blank_page()
-  let rng = gen-rng-f(11204122026)
+  let rng = gen-rng-f(13410082026)
   let disp = ""
   let data = csv(file, row-type: dictionary)
+  if data.filter(it => it.at("Cipher") == "HOMOPHONIC" and upper(it.at("Type")) == "CRYPTANALYSIS").len() > 2 {
+    return error("There should be no more than 2 Homophonic cryptanalysis problems on a test")
+  }
   if shuffle {
     let (rng, shuffled_data) = shuffle-f(rng, data.slice(1))
     data = (data.at(0),) + shuffled_data
@@ -291,7 +295,7 @@
             k: question.at("Key3"),
             shift: shift,
             mapping_str: mapping_str,
-            questiontext: question.at("Question Text"),
+            questiontext: question.at("Question Text", default: none),
             timed: true,
           )
           min_height(40%)[#disp]
@@ -324,6 +328,21 @@
             question.at("Key1"),
             question.at("Value"),
             question.at("Type"),
+            bonus: question.at("Bonus") == "TRUE",
+            questiontext: question.at("Question Text", default: none),
+          )
+          list(min_height(40%)[#disp], marker: strong(str(index) + "."))
+        } else if question.at("Cipher") == "HOMOPHONIC" {
+          // Key1: keyword; Key2: crib; Key3: optional number of alphabets revealed by the crib.
+          let disp = []
+          (rng, disp) = homophonic(
+            rng,
+            question.at("Plaintext"),
+            question.at("Type"),
+            question.at("Value"),
+            key: question.at("Key1"),
+            crib: question.at("Key2", default: none),
+            alphabets: question.at("Key3", default: none),
             bonus: question.at("Bonus") == "TRUE",
             questiontext: question.at("Question Text", default: none),
           )
