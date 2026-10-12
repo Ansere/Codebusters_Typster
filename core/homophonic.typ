@@ -122,7 +122,7 @@
           blockify(plaintext, 5).join(" ")
         } else {
           for chunk in ciphertext.chunks(5) {
-            box(chunk.map(str).join(" "))
+            box(chunk.map(str).map(it => it.replace("100", "00")).join(" "))
             h(1.5em)
           }
         }

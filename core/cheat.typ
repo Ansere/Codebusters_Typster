@@ -1,4 +1,8 @@
-#let cheat = [
+#let cheat = page(
+    margin: (right: 10%, left: 10%, top: 5%, bottom: 5%),
+    header: none,
+    footer: none
+  )[
   = Tables
   The tables below may be useful.
 
