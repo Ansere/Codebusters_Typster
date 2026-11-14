@@ -63,18 +63,18 @@
   = Morse Code
   #set text(font: "Fira Code", size: 10pt)
   #grid(columns: (auto, ) * 5, column-gutter: 1fr, 
-    table(columns: (2em, 4em), align: horizon + center, "A", strong("•−"), "B", strong("−•••"), "C", strong("−•−•"), "D", strong("−••"), "E", strong("•")),
-    table(columns: (2em, 4em), align: horizon + center, "F", strong("••−•"), "G", strong("−−•"), "H", strong("••••"), "I", strong("••"), "J", strong("•−−−")),
-    table(columns: (2em, 4em), align: horizon + center, "K", strong("−•−"), "L", strong("•−••"), "M", strong("−−"), "N", strong("−•"), "O", strong("−−−")),
-    table(columns: (2em, 4em), align: horizon + center, "P", strong("•−−•"), "Q", strong("−−•−"), "R", strong("•−•"), "S", strong("•••"), "T", strong("−")),
-    table(columns: (2em, 4em), align: horizon + center, "U", strong("••−"), "V", strong("•••−"), "W", strong("•−−"), "X", strong("−••−"), "Y", strong("−•−−"), "Z", strong("−−••")),
+    table(columns: (2em, 5em), align: horizon + center, "A", strong("•−"), "B", strong("−•••"), "C", strong("−•−•"), "D", strong("−••"), "E", strong("•")),
+    table(columns: (2em, 5em), align: horizon + center, "F", strong("••−•"), "G", strong("−−•"), "H", strong("••••"), "I", strong("••"), "J", strong("•−−−")),
+    table(columns: (2em, 5em), align: horizon + center, "K", strong("−•−"), "L", strong("•−••"), "M", strong("−−"), "N", strong("−•"), "O", strong("−−−")),
+    table(columns: (2em, 5em), align: horizon + center, "P", strong("•−−•"), "Q", strong("−−•−"), "R", strong("•−•"), "S", strong("•••"), "T", strong("−")),
+    table(columns: (2em, 5em), align: horizon + center, "U", strong("••−"), "V", strong("•••−"), "W", strong("•−−"), "X", strong("−••−"), "Y", strong("−•−−"), "Z", strong("−−••")),
   )
   #grid(columns: (auto, ) * 5, column-gutter: 1fr,
-    table(columns: (2em, 4em), align: horizon + center, "0", strong("−−−−−"), "1", strong("•−−−−")),
-    table(columns: (2em, 4em), align: horizon + center, "2", strong("••−−−"), "3", strong("•••−−")),
-    table(columns: (2em, 4em), align: horizon + center, "4", strong("••••−"), "5", strong("•••••")),
-    table(columns: (2em, 4em), align: horizon + center, "6", strong("−••••"), "7", strong("−−•••")),
-    table(columns: (2em, 4em), align: horizon + center, "8", strong("−−−••"), "9", strong("−−−−•")),
+    table(columns: (2em, 5em), align: horizon + center, "0", strong("−−−−−"), "1", strong("•−−−−")),
+    table(columns: (2em, 5em), align: horizon + center, "2", strong("••−−−"), "3", strong("•••−−")),
+    table(columns: (2em, 5em), align: horizon + center, "4", strong("••••−"), "5", strong("•••••")),
+    table(columns: (2em, 5em), align: horizon + center, "6", strong("−••••"), "7", strong("−−•••")),
+    table(columns: (2em, 5em), align: horizon + center, "8", strong("−−−••"), "9", strong("−−−−•")),
   )
   \
 
