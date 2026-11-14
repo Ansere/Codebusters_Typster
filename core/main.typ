@@ -186,15 +186,19 @@
         }
       }
       #set align(left)
+      #set par(
+        justify: true
+      )
       #set text(size: 12pt)
-      - You will have 50 minutes for this event
+      - You will have 50 minutes for this event.
       - Only writing utensils, a four or five function calculator, and your brain are allowed.
       - You may use the space on the exam as scratch paper, but please make sure that your answers are clear. Either write your answers separately and #box()[#rect("box", inset: (right: 0.5em, left: 0.5em, top: 0em, bottom: 0em), outset: (top: 0.2em, bottom: 0.2em, right: -0.1em, left: -0.1em))] them, or write them directly over/under the ciphertext.
       - You may take apart the test as you wish; please staple the test back together *in order* as you hand it in at the end.
-      - The first question is the *timed question*. If you solve the timed question in the first 10 minutes within two errors, you will receive a timed bonus. Raise your hand if you are done with the timed question and a volunteer will come over to check your answer and, if correct, record your time.
-      - If you do not solve the timed question within 10 minutes, you may still solve the question and receive points for it. You will just not receive any bonus points.
+      - The first question is the *timed question*. If you solve the timed question in the first 10 minutes within two errors, you will receive a timed bonus. Raise your hand if you are done with the timed question and a volunteer will come over to check your answer and, if correct, record your time. If you do not solve the timed question within 10 minutes, you may still solve the question and receive points for it. You will just not receive any bonus points.
       - Page 1 is for scoring. *Do not write anything on the scoring page* besides your team number!
-      - If possible, please write your team number on each page (top right).
+      - Ties are broken by highest-value question solved.
+      - Please write your team number on each page (top right).
+      #v(0.75em)
       #box(grid(
         columns: 2,
         rows: (1em,),
@@ -202,7 +206,14 @@
         gutter: 0.2em,
         align: horizon + center,
       ))
-      #v(1.5em)
+      #v(0.75em)
+      #box(grid(
+        columns: 2,
+        rows: (1em,),
+        [Competitor Names:], grid.cell(stroke: (bottom: black))[#h(72.4%)],
+        gutter: 0.2em,
+        align: horizon + center,
+      ))
       #box(grid(
         columns: 2,
         rows: (1em,),
@@ -299,12 +310,12 @@
             rows: rows,
             align: horizon + center,
             table.header([Question], [Points], [Score]),
-            ..range(2 * rows + 1, 3 * rows)
+            ..range(2 * rows - 1, 3 * rows - 2)
               .map(it => {
                 if it < data.len() {
                   let bonus = if data.at(it).at("Bonus") == "TRUE" { sym.star.filled } else { "" }
                   return ([#bonus#it], [#data.at(it).at("Value")], [])
-                } else if it < 3 * rows - 1 {
+                } else if it < 3 * rows - 3 {
                   return ([#sym.zws], [], [])
                 } else {
                   return ([Total], [#total_points], [])

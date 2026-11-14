@@ -78,21 +78,21 @@
   )
   \
 
-  #grid(columns: (auto, ) * 7, column-gutter: 1fr,
-    table(columns: (4em, 2em), align: horizon + center, "•", "E", "••", "I", "•••", "S", "••••", "H", "−•••", "B", "−−−−−", "0", "•••••", "5"),
-    table(columns: (4em, 2em), align: horizon + center, "−", "T", "−•", "A", "••−", "U", "•••−", "V", "−••−", "X", "•−−−−", "1", "−••••", "6"),
-    table(columns: (4em, 2em), align: horizon + center, "−•", "N", "•−•", "R", "••−•", "F", "−•−•", "C", "••−−−", "2", "−−•••", "7"),
-    table(columns: (4em, 2em), align: horizon + center, "−−", "M", "•−−", "W", "•−••", "L", "−•−−", "Y", "•••−−", "3", "−−−••", "8"),
-      table(columns: (4em, 2em), align: horizon + center,
-      "−••", "D", "•−−•", "P", "−−••", "Z", "••••−", "4", "−−−−•", "9"
-    ),
-    table(columns: (4em, 2em), align: horizon + center,
-      "−•−", "K", "•−−−", "J", "−•−•", "Q"
-    ),
-    table(columns: (4em, 2em), align: horizon + center,
-      "−−•", "G", "−−−", "O"
-    ),
-  )
+  // #grid(columns: (auto, ) * 7, column-gutter: 1fr,
+  //   table(columns: (4em, 2em), align: horizon + center, "•", "E", "••", "I", "•••", "S", "••••", "H", "−•••", "B", "−−−−−", "0", "•••••", "5"),
+  //   table(columns: (4em, 2em), align: horizon + center, "−", "T", "−•", "A", "••−", "U", "•••−", "V", "−••−", "X", "•−−−−", "1", "−••••", "6"),
+  //   table(columns: (4em, 2em), align: horizon + center, "−•", "N", "•−•", "R", "••−•", "F", "−•−•", "C", "••−−−", "2", "−−•••", "7"),
+  //   table(columns: (4em, 2em), align: horizon + center, "−−", "M", "•−−", "W", "•−••", "L", "−•−−", "Y", "•••−−", "3", "−−−••", "8"),
+  //     table(columns: (4em, 2em), align: horizon + center,
+  //     "−••", "D", "•−−•", "P", "−−••", "Z", "••••−", "4", "−−−−•", "9"
+  //   ),
+  //   table(columns: (4em, 2em), align: horizon + center,
+  //     "−•−", "K", "•−−−", "J", "−•−•", "Q"
+  //   ),
+  //   table(columns: (4em, 2em), align: horizon + center,
+  //     "−−•", "G", "−−−", "O"
+  //   ),
+  // )
   #v(100%)
 ]
 
