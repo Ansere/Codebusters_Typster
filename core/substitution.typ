@@ -108,7 +108,7 @@
     let mapping = mapping_str.clusters().enumerate().map(it => (it.at(1), alphabet.codepoints().at(it.at(0)))).sorted().to-dict()
     let ciphertext = aristo_encode(plaintext, mapping)
     let counts = alphabet.clusters().map(c => upper(ciphertext).clusters().filter(pc => pc == c).len())
-    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key) + [#mapping] +  [#counts])
+    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key))
   } else if k == none or k == "" {
     if type == "EXTRACT" {
       return (rng, error("k must be specified for extract type"))
@@ -117,7 +117,7 @@
     let mapping = alphabet.clusters().zip(shuffled_alphabet, exact: true).to-dict()
     let ciphertext = aristo_encode(plaintext, mapping)
     let counts = alphabet.clusters().map(c => upper(ciphertext).clusters().filter(pc => pc == c).len())
-    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key) +[#mapping] +[#counts])
+    return (rng, display(questiontext, ciphertext, mapping, counts, value, k, type, key))
   } else {
     if key == none {
       return (rng, error("Key must be provided when k is specified"))
