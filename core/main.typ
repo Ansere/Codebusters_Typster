@@ -45,9 +45,12 @@
   #counter(page).update(n => n - 1)
 ]
 
-#let odd_question_pages(questions) = {
-  // Finish the scoring page and start questions on an odd page.
-  pagebreak(to: "odd")
+#let question_pages(questions, double-sided: false) = {
+  let next-page = if double-sided { blank_page } else { pagebreak }
+  next-page()
+  if double-sided {
+    pagebreak(to: "odd")
+  }
 
   context {
     let width = 80% * page.width
@@ -75,7 +78,7 @@
       )
 
       if used + needed > height {
-        blank_page()
+        next-page()
         used = 0pt
       }
 
@@ -85,7 +88,7 @@
       // Your first question is the timed question:
       // give it its own page.
       if index == 0 and questions.len() > 1 {
-        blank_page()
+        next-page()
         used = 0pt
       }
     }
@@ -438,12 +441,7 @@
         gutter: 0.2em,
         align: horizon + center,
       ))
-      #v(100%)
     ]
-
-    if double-sided {
-      blank_page()
-    }
 
     let questions = ()
 
@@ -472,11 +470,7 @@
               questiontext: question.at("Question Text", default: none),
               timed: true,
             )
-            if not double-sided {
-              min_height(100%)[#disp]
-            } else {
-              min_height(40%)[#disp]
-            }
+            min_height(40%)[#disp]
           } else if question.at("Cipher") == "ARISTOCRAT" {
             // if Key2 is an integer, treat it as a shift. Otherwise, treat it as a mapping string.
             let shift = none
@@ -664,10 +658,6 @@
       questions.push(question-body)
     }
 
-    if double-sided {
-      odd_question_pages(questions)
-    } else {
-      questions.join()
-    }
+    question_pages(questions, double-sided: double-sided)
   }]
 }
