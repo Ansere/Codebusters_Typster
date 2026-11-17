@@ -78,21 +78,32 @@
   )
   \
 
-  #grid(columns: (auto, ) * 7, column-gutter: 1fr,
-    table(columns: (4.5em, 2em), align: horizon + center, "•", "E", "••", "I", "•••", "S", "••••", "H", "−•••", "B", "−−−−−", "0", "•••••", "5"),
-    table(columns: (4.5em, 2em), align: horizon + center, "−", "T", "•−", "A", "••−", "U", "•••−", "V", "−••−", "X", "•−−−−", "1", "−••••", "6"),
-    table(columns: (4.5em, 2em), align: horizon + center, "−•", "N", "•−•", "R", "••−•", "F", "−•−•", "C", "••−−−", "2", "−−•••", "7"),
-    table(columns: (4.5em, 2em), align: horizon + center, "−−", "M", "•−−", "W", "•−••", "L", "−•−−", "Y", "•••−−", "3", "−−−••", "8"),
-      table(columns: (4.5em, 2em), align: horizon + center,
-      "−••", "D", "•−−•", "P", "−−••", "Z", "••••−", "4", "−−−−•", "9"
-    ),
-    table(columns: (4.5em, 2em), align: horizon + center,
-      "−•−", "K", "•−−−", "J", "−−•−", "Q"
-    ),
-    table(columns: (4.5em, 2em), align: horizon + center,
-      "−−•", "G", "−−−", "O"
-    ),
-  )
+  #{
+    let row-height = 1.7em
+    let morse-column(offset, code-width: 4em, ..entries) = grid.cell(
+      inset: (top: offset * row-height),
+      table(
+        columns: (code-width, 1.55em),
+        rows: row-height,
+        inset: (x: 0.35em, y: 0pt),
+        align: (right + horizon, center + horizon),
+        ..entries.pos(),
+      ),
+    )
+
+    grid(
+      columns: (auto,) * 8,
+      column-gutter: 1fr,
+      morse-column(0, "•", "E", "••", "I", "•••", "S", "••••", "H", "−•••", "B", "−−−−−", "0", "•••••", "5"),
+      morse-column(0, "−", "T", "•−", "A", "••−", "U", "•••−", "V", "−••−", "X", "•−−−−", "1", "−••••", "6"),
+      morse-column(1, "−•", "N", "•−•", "R", "••−•", "F", "−•−•", "C", "••−−−", "2", "−−•••", "7"),
+      morse-column(1, "−−", "M", "•−−", "W", "•−••", "L", "−•−−", "Y", "•••−−", "3", "−−−••", "8"),
+      morse-column(2, "−••", "D", "•−−•", "P", "−−••", "Z", "••••−", "4", "−−−−•", "9"),
+      morse-column(2, "−•−", "K", "•−−−", "J", "−−•−", "Q"),
+      morse-column(2, code-width: 2.8em, "−−•", "G"),
+      morse-column(2, code-width: 2.8em, "−−−", "O"),
+    )
+  }
   #v(100%)
 ]
 
