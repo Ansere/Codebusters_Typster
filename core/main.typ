@@ -472,7 +472,11 @@
               questiontext: question.at("Question Text", default: none),
               timed: true,
             )
-            min_height(40%)[#disp]
+            if not double-sided {
+              min_height(100%)[#disp]
+            } else {
+              min_height(40%)[#disp]
+            }
           } else if question.at("Cipher") == "ARISTOCRAT" {
             // if Key2 is an integer, treat it as a shift. Otherwise, treat it as a mapping string.
             let shift = none
